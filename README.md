@@ -7,7 +7,7 @@ Al arrancar hace una petición al servidor de elastic e identifica los patrones 
 ![alt text](img/list.png)
 
 Una vez que los patrones podemos usar los comandos disponibles:
-1. **create {patron_indices} {meses_para_cerrar} {meses_para_borrar}**
+- **create {patron_indices} {meses_para_cerrar} {meses_para_borrar}**
   Genera un fichero de configuración guardando los meses que tienen que pasar para cerrar y para borrar los indices que cumplan ese patrón de indice.
 - **show {patron_indice}**
   Muestra la configuración de un patrón de indice
