@@ -21,19 +21,19 @@ print("""
     
                                                                @ Iker Loidi""")
 def isCompatible(index):
-    if re.search('\d{4}-\d{2}', index) is not None or re.search('\d{2}-\d{4}', index) is not None:
+    if re.search('\d{4}-[0-9]{1,2}', index) is not None or re.search('[0-9]{1,2}-\d{4}', index) is not None:
         return True
     else:
         return False
 
 def getPattern(index):
     try:
-        if re.search('\d{4}-\d{2}', index) is not None:
-            return index.replace(re.search('\d{4}-\d{2}', index).group(0),"#")
+        if re.search('\d{4}-[0-9]{1,2}', index) is not None:
+            return index.replace(re.search('\d{4}-[0-9]{1,2}', index).group(0),"#")
             #print("[+] Es del mes {} del ano {}".format(re.search('\d{4}-\d{2}', index).group(0).split("-")[1],re.search('\d{4}-\d{2}', index).group(0).split("-")[0]))
-        if re.search('\d{2}-\d{4}', index) is not None:
+        if re.search('[0-9]{1,2}-\d{4}', index) is not None:
             #print("[+] Es del mes {} del ano {}".format(re.search('\d{2}-\d{4}', index).group(0).split("-")[0],re.search('\d{2}-\d{4}', index).group(0).split("-")[1]))
-            return str(index.replace(re.search('\d{2}-\d{4}', index).group(0),"#"))
+            return str(index.replace(re.search('[0-9]{1,2}-\d{4}', index).group(0),"#"))
 
     except:
             print("[-] Error al intentar identificar la fecha de {}".format(index))
@@ -133,9 +133,9 @@ def executeConfig(index):
             if isCompatible(indice_linea['index']) and getPattern(indice_linea['index']) == index: 
                 print("[+] Encontrado el indice: {}".format(indice_linea['index']))
                 try:
-                    if re.search('\d{4}-\d{2}', indice_linea['index']) is not None:
-                        print("[+] Es del mes {} del ano {}".format(re.search('\d{4}-\d{2}', indice_linea['index']).group(0).split("-")[1],re.search('\d{4}-\d{2}', indice_linea['index']).group(0).split("-")[0]))
-                        indexMes = getMes(re.search('\d{4}-\d{2}', indice_linea['index']).group(0).split("-")[0],re.search('\d{4}-\d{2}', indice_linea['index']).group(0).split("-")[1])
+                    if re.search('\d{4}-[0-9]{1,2}', indice_linea['index']) is not None:
+                        print("[+] Es del mes {} del ano {}".format(re.search('\d{4}-[0-9]{1,2}', indice_linea['index']).group(0).split("-")[1],re.search('\d{4}-[0-9]{1,2}', indice_linea['index']).group(0).split("-")[0]))
+                        indexMes = getMes(re.search('\d{4}-[0-9]{1,2}', indice_linea['index']).group(0).split("-")[0],re.search('\d{4}-[0-9]{1,2}', indice_linea['index']).group(0).split("-")[1])
                         today = datetime.datetime.today()
                         nowMes = getMes(today.year,today.month)
                         print("[*] Hoy es  el mes {} y el indice es del mes {}. Hay {} meses de diferencia".format(nowMes,indexMes,nowMes-indexMes))
@@ -144,11 +144,16 @@ def executeConfig(index):
                             print(requests.post("http://localhost:9200/{}/_close".format(str(indice_linea['index']))))
                         if int(nowMes-indexMes) > int(json_data['tsRem']):
                             print(FAIL+"[+] Borrando indice "+indice_linea['index']+ENDC)
+                            # ultima comprobacion
+                            if not "*" in str(indice_linea['index']) and str(indice_linea['index']) != "":
+                                print(requests.delete("http://localhost:9200/{}".format(str(indice_linea['index']))))
+                            else:
+                                print("[-] Abortado..")
                         
                         
-                    if re.search('\d{2}-\d{4}', indice_linea['index']) is not None:
-                        print("[+] Es del mes {} del ano {}".format(re.search('\d{2}-\d{4}', indice_linea['index']).group(0).split("-")[0],re.search('\d{2}-\d{4}', indice_linea['index']).group(0).split("-")[1]))
-                        indexMes = getMes(re.search('\d{2}-\d{4}', indice_linea['index']).group(0).split("-")[1],re.search('\d{2}-\d{4}', indice_linea['index']).group(0).split("-")[0])
+                    if re.search('[0-9]{1,2}-\d{4}', indice_linea['index']) is not None:
+                        print("[+] Es del mes {} del ano {}".format(re.search('[0-9]{1,2}-\d{4}', indice_linea['index']).group(0).split("-")[0],re.search('[0-9]{1,2}-\d{4}', indice_linea['index']).group(0).split("-")[1]))
+                        indexMes = getMes(re.search('[0-9]{1,2}-\d{4}', indice_linea['index']).group(0).split("-")[1],re.search('[0-9]{1,2}-\d{4}', indice_linea['index']).group(0).split("-")[0])
                         today = datetime.datetime.today()
                         nowMes = getMes(int(today.year),int(today.month))
                         print("[*] Hoy es  el mes {} y el indice es del mes {}. Hay {} meses de diferencia".format(nowMes,indexMes,nowMes-indexMes))
@@ -157,6 +162,10 @@ def executeConfig(index):
                             print(requests.post("http://localhost:9200/{}/_close".format(str(indice_linea['index']))))
                         if int(nowMes-indexMes) > int(json_data['tsRem']):
                             print(FAIL+"[+] Borrando indice "+indice_linea['index']+ENDC)
+                            if not "*" in str(indice_linea['index']) and str(indice_linea['index']) != "":
+                                print(requests.delete("http://localhost:9200/{}".format(str(indice_linea['index']))))
+                            else:
+                                print("[-] Abortado..")
 
                 except Exception as p:
                     print(p)
