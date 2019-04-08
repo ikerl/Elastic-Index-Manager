@@ -19,7 +19,7 @@ print("""
 |___|___|  /\____ |\___  >__/\_ \ \____|__  (____  /___|  (____  /\___  / \___  >__|   
          \/      \/    \/      \/         \/     \/     \/     \//_____/      \/       
     
-                                                         """)
+                                                               @ Iker Loidi""")
 def isCompatible(index):
     if re.search('\d{4}-\d{2}', index) is not None or re.search('\d{2}-\d{4}', index) is not None:
         return True
@@ -113,13 +113,13 @@ def getMes(year,month):
     return int(year)*12+int(month)
 
 def executeAll():
-	try:
-		for file in os.listdir("./config"):
-			executeConfig(file)	
-			print("[+] Ejecutando configuracion para {}".format(file))
-	except:
-		print("[-] Error al ejecutar ficheros de configuracion")
-		
+    try:
+        for file in os.listdir("./config"):
+            executeConfig(file)	
+            print("[+] Ejecutando configuracion para {}".format(file))
+    except:
+        print("[-] Error al ejecutar ficheros de configuracion")
+        
 def executeConfig(index):
     try:
         f = open("./config/"+index,"r")
@@ -141,7 +141,7 @@ def executeConfig(index):
                         print("[*] Hoy es  el mes {} y el indice es del mes {}. Hay {} meses de diferencia".format(nowMes,indexMes,nowMes-indexMes))
                         if int(nowMes-indexMes) > int(json_data['tsClose']):
                             print(WARNING+"[+] Cerrando indice "+indice_linea['index']+ENDC)
-			    print(requests.post("http://localhost:9200/{}/_close".format(str(indice_linea['index']))))
+                            print(requests.post("http://localhost:9200/{}/_close".format(str(indice_linea['index']))))
                         if int(nowMes-indexMes) > int(json_data['tsRem']):
                             print(FAIL+"[+] Borrando indice "+indice_linea['index']+ENDC)
                         
@@ -154,7 +154,7 @@ def executeConfig(index):
                         print("[*] Hoy es  el mes {} y el indice es del mes {}. Hay {} meses de diferencia".format(nowMes,indexMes,nowMes-indexMes))
                         if int(nowMes-indexMes) > int(json_data['tsClose']):
                             print(WARNING+"[+] Cerrando indice "+indice_linea['index']+ENDC)
-			    print(requests.post("http://localhost:9200/{}/_close".format(str(indice_linea['index']))))
+                            print(requests.post("http://localhost:9200/{}/_close".format(str(indice_linea['index']))))
                         if int(nowMes-indexMes) > int(json_data['tsRem']):
                             print(FAIL+"[+] Borrando indice "+indice_linea['index']+ENDC)
 
@@ -164,11 +164,23 @@ def executeConfig(index):
     except:
         print("[-] Error al abrir el fichero de configuracion {}".format(index))
 
+def checkConfigDir():
+    if not os.path.exists("config/"):
+        try:
+            os.mkdir("config")
+        except:
+            print("[-] No se ha podido crear el directorio de configuraciones")
+            sys.exit(-1)
+
+
 if len(sys.argv) > 1:
-	if sys.argv[1] == "execute":
-		executeAll()
-		exit(0)
-	
+    if sys.argv[1] == "execute":
+        executeAll()
+        sys.exit(0)
+    else:
+        print("\n[-] Usar \"{} execute para ejecutar todos las configuraciones\"".format(sys.argv[0]))
+        sys.exit(-1)
+
 listIndices()
 
 while(True):
