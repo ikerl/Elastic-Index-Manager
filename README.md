@@ -1,6 +1,6 @@
 # Elastic-Index-Manager
 
-La herramienta detecta index patterns que contienen la estructura {año}/{mes} o {mes}/{año} y permite gestionar cuanto tiempo tiene que pasar que sean cerrados o borrados. Es decir, extrae la fecha desde el nombre del indice y compara con la fecha actual para que, dependiendo de su antiguedad, cerrar o borrar los indices que excedan los tiempos configurados.
+La herramienta detecta index patterns que contienen la estructura {año}/{mes} o {mes}/{año} y permite gestionar cuanto tiempo tiene que pasar que sean cerrados o borrados. Es decir, extrae la fecha mirando el nombre del indice y compara con la fecha actual para que, dependiendo de su antigüedad, cerrar o borrar los indices que excedan los tiempos configurados.
 
 Al arrancar hace una petición al servidor de elastic e identifica los patrones de indices compatibles:
 
