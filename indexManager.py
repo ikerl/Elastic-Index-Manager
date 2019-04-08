@@ -172,6 +172,7 @@ def checkConfigDir():
             print("[-] No se ha podido crear el directorio de configuraciones")
             sys.exit(-1)
 
+checkConfigDir()
 
 if len(sys.argv) > 1:
     if sys.argv[1] == "execute":
