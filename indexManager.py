@@ -178,7 +178,7 @@ if len(sys.argv) > 1:
         executeAll()
         sys.exit(0)
     else:
-        print("\n[-] Usar \"{} execute para ejecutar todos las configuraciones\"".format(sys.argv[0]))
+        print("\n[-] Usar \"{} execute\" para ejecutar todos las configuraciones".format(sys.argv[0]))
         sys.exit(-1)
 
 listIndices()
